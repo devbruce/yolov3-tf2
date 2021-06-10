@@ -34,9 +34,10 @@
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.625
 ```
 
-#### Speed
+#### Inference Speed
 
-- GPU: 12~14 FPS
+- GPU: About 15 ~ 16 FPS
+- CPU: About 3 ~ 4 FPS
 
 <br>
 
@@ -59,9 +60,10 @@
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.367
 ```
 
-#### Speed
+#### Inference Speed
 
-- GPU: 43~44 FPS
+- GPU: About 53 ~ 55 FPS
+- CPU: About 19 ~ 20 FPS
 
 <br><br>
 
