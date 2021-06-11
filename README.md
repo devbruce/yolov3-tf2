@@ -109,9 +109,40 @@ If you want to only inference with uploaded pretrained coco weight file, keep de
 
 <br><br>
 
-## Get Predictions and Visualization
+## Inference
 
-- Tutorial: [`./tutorial.ipynb`](./tutorial.ipynb)
+> Inference and Visualization Tutorial: [`./tutorial.ipynb`](./tutorial.ipynb)
+
+```python
+import cv2
+from libs.inference import YoloInf
+
+
+# Load a image to inference
+img_path = '...'
+img_arr = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
+
+# Define YOLO Model to inference
+ckpt_path = '...'
+yolo_inf = YoloInf(ckpt_path=ckpt_path)
+
+# Get inference result
+preds = yolo_inf.get(img_arr=img_arr, conf_thr=0.3)  # List of dicts
+```
+
+### Inference Output(`preds`) Format
+
+```python
+[
+    {
+        'bbox': [left:int, top:int, right:int, bottom:int]  # [x_min, y_min, x_max, y_max],
+        'confidence': confidence:float,
+        'class_index': class_index:int,
+        'class_name': class_name:str,
+    },
+    # ...
+]
+```
 
 <br><br>
 
