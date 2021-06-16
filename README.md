@@ -247,6 +247,6 @@ If you put another image extensions, separate elements by comma (`--img_exts=.jp
 
 <br>
 
-### Code
+### GitHub Repository
 
 - [pythonlessons / TensorFlow-2.x-YOLOv3](https://github.com/pythonlessons/TensorFlow-2.x-YOLOv3)
