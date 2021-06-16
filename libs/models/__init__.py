@@ -1,5 +1,5 @@
 import tensorflow as tf
-from .yolos import yolo_v3, yolo_v3_tiny
+from libs.models.yolos import yolo_v3, yolo_v3_tiny
 from configs import cfg
 
 

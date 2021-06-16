@@ -1,6 +1,6 @@
 import tensorflow as tf
-from .darknets import darknet53, darknet19_tiny
-from .layers import conv_block, upsample
+from libs.models.darknets import darknet53, darknet19_tiny
+from libs.models.layers import conv_block, upsample
 
 
 __all__ = ['yolo_v3', 'yolo_v3_tiny']

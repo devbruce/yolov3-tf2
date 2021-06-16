@@ -1,5 +1,4 @@
-import os
-from .base import Configs, ProjectPath
+from configs.base import Configs, ProjectPath
 
 
 __all__ = ['Configs', 'ProjectPath', 'cfg']

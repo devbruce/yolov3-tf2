@@ -1,5 +1,5 @@
 import tensorflow as tf
-from .layers import conv_block, residual_block
+from libs.models.layers import conv_block, residual_block
 
 
 __all__ = ['darknet53', 'darknet19_tiny']
