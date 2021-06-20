@@ -16,14 +16,14 @@ RUN pip install pycocotools==2.0.2
 RUN pip install tqdm==4.61.0
 RUN pip install jupyterlab==3.0.16
 
-COPY preview /YOLOv3-TF2/preview/
-COPY datasets /YOLOv3-TF2/datasets/
-COPY ckpts /YOLOv3-TF2/ckpts/
-COPY tutorial.ipynb /YOLOv3-TF2/
-COPY README.md /YOLOv3-TF2/
-COPY eval_coco.py /YOLOv3-TF2/
-COPY train.py /YOLOv3-TF2/
-COPY configs /YOLOv3-TF2/configs/
-COPY libs /YOLOv3-TF2/libs/
+COPY preview /yolov3-tf2/preview/
+COPY datasets /yolov3-tf2/datasets/
+COPY ckpts /yolov3-tf2/ckpts/
+COPY tutorial.ipynb /yolov3-tf2/
+COPY README.md /yolov3-tf2/
+COPY eval_coco.py /yolov3-tf2/
+COPY train.py /yolov3-tf2/
+COPY configs /yolov3-tf2/configs/
+COPY libs /yolov3-tf2/libs/
 
-WORKDIR /YOLOv3-TF2
+WORKDIR /yolov3-tf2
