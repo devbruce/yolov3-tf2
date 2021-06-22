@@ -31,12 +31,15 @@ def get_losses(pred_raw, pred_decoded, label, bboxes, stride, iou_loss_thr, num_
     bbox_loss_scale = 2.0 - 1.0 * label_xywh[:, :, :, :, 2:3] * label_xywh[:, :, :, :, 3:4] / (input_size ** 2)
     giou_loss = label_conf * bbox_loss_scale * (1 - giou)
 
-    iou = bbox_iou(pred_decoded_xywh[:, :, :, :, np.newaxis, :], bboxes[:, np.newaxis, np.newaxis, np.newaxis, :, :])
     # Find the value of IoU with the real box The largest prediction box
+    ## pred_decoded_xywh.shape: [batch_size, y_idx, x_idx, num_scales, 4]
+    ## bboxes.shape:            [batch_size, max_num_bboxes_per_scale, 4]
+    iou = bbox_iou(pred_decoded_xywh[:, :, :, :, np.newaxis, :], bboxes[:, np.newaxis, np.newaxis, np.newaxis, :, :])
+    ## iou.shape: [batch_size, y_idx, x_idx, num_scales, max_num_bboxes_per_scale]
     max_iou = tf.expand_dims(tf.reduce_max(iou, axis=-1), axis=-1)
 
     # If the largest iou is less than the threshold, it is considered that the prediction box contains no objects, then the background box
-    respond_bgd = (1.0 - label_conf) * tf.cast(max_iou < iou_loss_thr, tf.float32)
+    respond_bg = (1.0 - label_conf) * tf.cast(max_iou < iou_loss_thr, tf.float32)
     conf_focal = tf.pow(label_conf - pred_decoded_conf, 2)
 
     # Calculate the loss of confidence
@@ -44,7 +47,7 @@ def get_losses(pred_raw, pred_decoded, label, bboxes, stride, iou_loss_thr, num_
     conf_loss = conf_focal * (
             label_conf * tf.nn.sigmoid_cross_entropy_with_logits(labels=label_conf, logits=pred_raw_conf)
             +
-            respond_bgd * tf.nn.sigmoid_cross_entropy_with_logits(labels=label_conf, logits=pred_raw_conf)
+            respond_bg * tf.nn.sigmoid_cross_entropy_with_logits(labels=label_conf, logits=pred_raw_conf)
     )
 
     prob_loss = label_conf * tf.nn.sigmoid_cross_entropy_with_logits(labels=label_prob, logits=pred_raw_prob)
