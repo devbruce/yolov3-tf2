@@ -41,7 +41,7 @@ def main(_argv):
         _transfer_coco()
     
     # Dataset & Tensorboard
-    data_loader_options = {'project_name': cfg.project_name, 'batch_size':cfg.batch_size, 'input_size': cfg.input_size}
+    data_loader_options = {'project_name': cfg.project_name, 'batch_size': FLAGS.batch_size, 'input_size': cfg.input_size}
     train_ds = CocoDataLoader(stage='train', shuffle=True, aug=True, **data_loader_options)
     tb_train_writer = tf.summary.create_file_writer(ProjectPath.LOGS_DIR.value)
 
