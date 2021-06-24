@@ -101,9 +101,13 @@ class PrepLabels:
         return label_sbbox, label_mbbox, label_lbbox, sbboxes, mbboxes, lbboxes
 
 
-    def _smooth_onehot(self, class_index, delta=1e-2):
+    def _smooth_onehot(self, class_index, epsilon=1e-2):
+        """
+        Label-Smoothing Regularization (LSR)
+        arXiv: https://arxiv.org/abs/1512.00567
+        """
         onehot = np.zeros(self.num_classes, dtype=np.float32)
         onehot[int(class_index)] = 1.0
-        uniform_distribution = np.full(self.num_classes, 1.0 / self.num_classes)
-        smooth_onehot = onehot * (1 - delta) + delta * uniform_distribution
+        uniform_distribution = np.full(self.num_classes, 1.0/self.num_classes)
+        smooth_onehot = onehot * (1 - epsilon) + epsilon * uniform_distribution
         return smooth_onehot
