@@ -1,5 +1,6 @@
 import os
 import json
+import tqdm
 import cv2
 import numpy as np
 from libs.utils.augs import get_transform, letterbox
@@ -118,7 +119,7 @@ class _CocoDataIter:
         coco_ann_json = json.load(open(self.coco_ann_path))
         coco_imgs = coco_ann_json['images']
         coco_anns = coco_ann_json['annotations']
-        for coco_img in coco_imgs:
+        for coco_img in tqdm.tqdm(coco_imgs, total=len(coco_imgs), desc=f'[{self.stage}]Loading Dataset'):
             img_id = coco_img['id']
             fname = coco_img['file_name']
             img_path = os.path.join(self.imgs_dir, fname)
