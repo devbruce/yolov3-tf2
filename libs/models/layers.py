@@ -21,11 +21,9 @@ class BatchNormalization(tf.keras.layers.BatchNormalization):
 def conv_block(x, out_channels, kernel_size, downsample=False, activate='leaky', bn=True):
     if downsample:
         x = tf.keras.layers.ZeroPadding2D(((1, 0), (1, 0)))(x)  # Top, Left half padding
-        padding = 'valid'
-        strides = 2
+        strides, padding = 2, 'valid'
     else:
-        strides = 1
-        padding = 'same'
+        strides, padding = 1, 'same'
 
     x = tf.keras.layers.Conv2D(
         filters=out_channels,
