@@ -7,7 +7,7 @@ __all__ = ['yolo_v3', 'yolo_v3_tiny']
 
 
 def yolo_v3(input_layer, num_classes):
-    sobj_fm, mobj_fm, x = darknet53(input_layer)
+    x_256, x_512, x = darknet53(input_layer)
     x = conv_block(x, out_channels=512, kernel_size=1)
     x = conv_block(x, out_channels=1024, kernel_size=3)
     x = conv_block(x, out_channels=512, kernel_size=1)
@@ -21,7 +21,7 @@ def yolo_v3(input_layer, num_classes):
     x = conv_block(x, out_channels=256, kernel_size=1)
     x = upsample(x)
 
-    x = tf.concat([x, mobj_fm], axis=-1)
+    x = tf.concat([x, x_512], axis=-1)
     x = conv_block(x, out_channels=256, kernel_size=1)
     x = conv_block(x, out_channels=512, kernel_size=3)
     x = conv_block(x, out_channels=256, kernel_size=1)
@@ -35,7 +35,7 @@ def yolo_v3(input_layer, num_classes):
     x = conv_block(x, out_channels=128, kernel_size=1)
     x = upsample(x)
 
-    x = tf.concat([x, sobj_fm], axis=-1)
+    x = tf.concat([x, x_256], axis=-1)
     x = conv_block(x, out_channels=128, kernel_size=1)
     x = conv_block(x, out_channels=256, kernel_size=3)
     x = conv_block(x, out_channels=128, kernel_size=1)
@@ -49,7 +49,7 @@ def yolo_v3(input_layer, num_classes):
 
 
 def yolo_v3_tiny(input_layer, num_classes):
-    mobj_fm, x = darknet19_tiny(input_layer)
+    x_256, x = darknet19_tiny(input_layer)
     x = conv_block(x, out_channels=256, kernel_size=1)
     
     # lobj_branch is used to predict large-sized objects , Shape = [None, 26, 26, (num_classes+5)*3]
@@ -59,7 +59,7 @@ def yolo_v3_tiny(input_layer, num_classes):
     x = conv_block(x, out_channels=128, kernel_size=1)
     x = upsample(x)
     
-    x = tf.concat([x, mobj_fm], axis=-1)
+    x = tf.concat([x, x_256], axis=-1)
     
     # mobj_branch is used to predict medium size objects, shape = [None, 13, 13, (num_classes+5)*3]
     mobj_branch = conv_block(x, out_channels=256, kernel_size=3)
