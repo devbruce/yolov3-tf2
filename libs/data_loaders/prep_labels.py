@@ -44,13 +44,14 @@ class PrepLabels:
         cxcywh_per_scale = [np.zeros((self.max_num_bboxes_per_scale, 4)) for _ in range(3)]
         n_bboxes_per_scale = np.zeros((3,))
 
-        for label in labels:
+        for label in labels:  # label: one box
             # Box Coordinates
             ltrb = label[:4]
             cxcy = (ltrb[2:] + ltrb[:2]) * 0.5
             wh = ltrb[2:] - ltrb[:2]
             cxcywh = np.concatenate([cxcy, wh], axis=-1)
             cxcywh_scaled = 1.0 * cxcywh[np.newaxis, :] / self.strides[:, np.newaxis]  # with broad-casting
+            # cxcywh_scaled means y_idx:float, x_idx:float per scales
 
             # Class Index
             cls_idx = label[4]
