@@ -36,8 +36,8 @@
 
 #### Inference Speed
 
-- GPU: About 15 ~ 16 FPS
-- CPU: About 3 ~ 4 FPS
+- GPU(GeForce RTX 3090): About 15 ~ 16 FPS
+- CPU(AMD Ryzen 5 5600X 6-Core Processor): About 3 ~ 4 FPS
 
 <br>
 
@@ -62,8 +62,8 @@
 
 #### Inference Speed
 
-- GPU: About 53 ~ 55 FPS
-- CPU: About 19 ~ 20 FPS
+- GPU(GeForce RTX 3090): About 53 ~ 55 FPS
+- CPU(AMD Ryzen 5 5600X 6-Core Processor): About 19 ~ 20 FPS
 
 <br><br>
 
