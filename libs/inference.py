@@ -70,21 +70,22 @@ class YoloInf:
 
         # 3. clip some boxes those are out of range
         pred_coor = np.concatenate([np.maximum(pred_coor[:, :2], [0, 0]),
-                                    np.minimum(pred_coor[:, 2:], [origin_img_width - 1, origin_img_height - 1])], axis=-1)
+                                    np.minimum(pred_coor[:, 2:], [origin_img_width-1, origin_img_height-1])], axis=-1)
         invalid_mask = np.logical_or((pred_coor[:, 0] > pred_coor[:, 2]), (pred_coor[:, 1] > pred_coor[:, 3]))
         pred_coor[invalid_mask] = 0
 
         # 4. discard some invalid boxes
+        ## pred_coor[:, 2:4] - pred_coor[:, 0:2] --> [[width, height], ...]
         bboxes_scale = np.sqrt(np.multiply.reduce(pred_coor[:, 2:4] - pred_coor[:, 0:2], axis=-1))
         scale_mask = np.logical_and((valid_scale[0] < bboxes_scale), (bboxes_scale < valid_scale[1]))
 
-        # 5. discard boxes with low scores
+        # 5. discard boxes with low confidence
         classes = np.argmax(pred_prob, axis=-1)
-        scores = pred_conf * pred_prob[np.arange(len(pred_coor)), classes]
-        score_mask = scores > conf_thr
-        mask = np.logical_and(scale_mask, score_mask)
-        coors, scores, classes = pred_coor[mask], scores[mask], classes[mask]
-        return np.concatenate([coors, scores[:, np.newaxis], classes[:, np.newaxis]], axis=-1)
+        conf = pred_conf * pred_prob[:, classes]
+        conf_mask = conf > conf_thr
+        mask = np.logical_and(scale_mask, conf_mask)
+        coors, conf, classes = pred_coor[mask], conf[mask], classes[mask]
+        return np.concatenate([coors, conf[:, np.newaxis], classes[:, np.newaxis]], axis=-1)
 
     def _nms(self, bboxes):
         """
