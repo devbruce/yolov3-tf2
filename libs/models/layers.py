@@ -4,20 +4,6 @@ import tensorflow as tf
 __all__ = ['conv_block', 'residual_block', 'upsample']
 
 
-class BatchNormalization(tf.keras.layers.BatchNormalization):
-    """
-    "Frozen state" and "inference mode" are two separate concepts.
-    `layer.trainable = False` is to freeze the layer,
-    so the layer will use stored moving `var` and `mean` in the "inference mode",
-    and both `gamma` and `beta` will not be updated !
-    """
-    def call(self, x, training=False):
-        if not training:
-            training = tf.constant(False)
-        training = tf.logical_and(training, self.trainable)
-        return super().call(x, training)
-
-
 def conv_block(x, out_channels, kernel_size, downsample=False, activate='leaky', bn=True):
     if downsample:
         x = tf.keras.layers.ZeroPadding2D(((1, 0), (1, 0)))(x)  # Top, Left half padding
@@ -36,7 +22,7 @@ def conv_block(x, out_channels, kernel_size, downsample=False, activate='leaky',
         bias_initializer=tf.constant_initializer(0.)
     )(x)
 
-    x = BatchNormalization()(x) if bn else x
+    x = tf.keras.layers.BatchNormalization()(x) if bn else x
     if activate == 'leaky':
         x = tf.keras.layers.LeakyReLU(alpha=0.1)(x)
     else:
