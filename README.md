@@ -77,9 +77,7 @@ $ docker build -t ${NAME}:${TAG} .
 
 ### Create Container
 
-```bash
-$ docker run -d -it --gpus all --shm-size=${PROPER_VALUE} ${NAME}:${TAG} /bin/bash
-```
+Create container with `docker create` or `docker run`
 
 <br><br>
 
@@ -95,7 +93,7 @@ If you want to only inference with uploaded pretrained coco weight file, keep de
     "classes": {                     # Class index starts from 1 (Not 0)
         "1": "class 1",
         "2": "class 2",
-        . . .
+        ...
     }
 }
 ```
@@ -157,7 +155,7 @@ preds = yolo_inf.get(img_arr=img_arr, conf_thr=0.3)  # List of dicts
 ### Training Script
 
 ```bash
-$ python train.py
+python train.py
 ```
 
 #### Options
@@ -196,7 +194,7 @@ ${PROJECT_NAME}
     │      ├── 0001.png
     │      ├── 0002.png
     │      ├── 0003.png
-    │      ├── . . .
+    │      ├── ...
     │
     │
     └──── val
@@ -204,7 +202,7 @@ ${PROJECT_NAME}
            ├── 0001.png
            ├── 0002.png
            ├── 0003.png
-           ├── . . .
+           ├── ...
 ```
 
 <br><br>
@@ -214,7 +212,7 @@ ${PROJECT_NAME}
 ### Evaluation Script
 
 ```bash
-$ python eval_coco.py --ckpt={PATH} --img_prefix={PATH} --coco_gt={PATH}
+python eval_coco.py --ckpt=${CKPT_PATH} --img_prefix=${IMG_PREFIX} --coco_gt=${COCO_GT_PATH}
 ```
 
 #### Options
