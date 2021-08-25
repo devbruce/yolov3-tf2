@@ -20,9 +20,10 @@ flags.DEFINE_boolean('transfer_coco', default=True, help='Transfer pretrained co
 flags.DEFINE_boolean('validation', default=True, help='Training with validation')
 
 
-# Save some gpu errors
+# Save some gpu memories
 physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(device=physical_devices[0], enable=True)
+for physical_device in physical_devices:
+    tf.config.experimental.set_memory_growth(device=physical_device, enable=True)
 
 
 def main(_argv):

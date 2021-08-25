@@ -17,9 +17,10 @@ flags.mark_flag_as_required('conf_thr')
 flags.mark_flag_as_required('img_exts')
 
 
-# Save some gpu errors
+# Save some gpu memories
 physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(device=physical_devices[0], enable=True)
+for physical_device in physical_devices:
+    tf.config.experimental.set_memory_growth(device=physical_device, enable=True)
 
 
 def main(_argv):
