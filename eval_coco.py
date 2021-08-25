@@ -31,7 +31,7 @@ def main(_argv):
         conf_thr=FLAGS.conf_thr,
         img_exts=FLAGS.img_exts,
     )
-    coco_eval.get()
+    coco_eval.get(verbose=True)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,9 @@
 import os
 import json
+import copy
 import tqdm
 import cv2
+import numpy as np
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 from libs.utils import PathManager
@@ -57,7 +59,7 @@ class GetCocoEval:
     def _get_coco_preds(self):
         coco_preds = list()
         for img_fname in tqdm.tqdm(self.img_fnames, total=len(self.img_fnames), desc='Creating COCO Predictions'):
-            if not self.fname2img_id_map.get(img_fname):
+            if self.fname2img_id_map.get(img_fname) is None:
                 print(f'* Filtered not exist in COCO GT File {img_fname}')
                 continue
 
@@ -83,14 +85,40 @@ class GetCocoEval:
                 coco_preds.append(coco_pred)
                 
         return coco_preds
-    
-    def get(self):
-        if self.coco_preds == []:
+
+    def get(self, verbose=True):
+        if not self.coco_preds:
             print('\n* No predictions\n')
             return
         cocoGt = COCO(self.coco_gt_path)
-        cocoDt = cocoGt.loadRes(self.coco_preds)
+        cocoDt = cocoGt.loadRes(copy.deepcopy(self.coco_preds))
         cocoEval = COCOeval(cocoGt=cocoGt, cocoDt=cocoDt, iouType='bbox')
         cocoEval.evaluate()
         cocoEval.accumulate()
-        cocoEval.summarize()
+        if verbose:
+            cocoEval.summarize()
+            
+        precisions = cocoEval.eval['precision']
+        cat_ids = list(self.cat_map.values())
+        assert len(cat_ids) == precisions.shape[2]
+
+        # ====== Classwise ============
+        cls_ap_map = dict()
+        for idx, cat_id in enumerate(cat_ids):
+            cls_info = cocoGt.loadCats(cat_id)[0]
+            precision = precisions[:, :, idx, 0, -1]
+            precision = precision[precision > -1]
+            ap = np.mean(precision) if precision.size else float('nan')
+            cls_name = cls_info['name']
+            cls_ap_map[cls_name] = float(ap)
+        # ====== ========= ============
+
+        cls_ap_map['mAP'] = cocoEval.stats[0]
+        
+        if verbose:
+            print('\n====== APs per Class (@[ IoU=0.50:0.95 | area=   all | maxDets=100 ]) ======')
+            for cls_name, ap in cls_ap_map.items():
+                print(f'* {cls_name}: {ap:.3f}')
+            print('=' * 77)
+        
+        return cls_ap_map
